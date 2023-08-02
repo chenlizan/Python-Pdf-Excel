@@ -1,5 +1,7 @@
 import os
+
 import pdfplumber
+import camelot
 import tabula
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -22,8 +24,14 @@ path = os.path.join(HERE,
 #     t = page.extract_text()
 #     print(t)
 
-dfs = tabula.read_pdf(path, pages='all')
+# dfs = tabula.read_pdf(path, pages='all')
+#
+# print(len(dfs))
+#
+# dfs
 
-print(len(dfs))
+tables = camelot.read_pdf(path)
 
-dfs
+print(len(tables))
+
+tables
