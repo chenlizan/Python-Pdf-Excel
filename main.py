@@ -1,37 +1,29 @@
 import os
 
-import pdfplumber
-import camelot
+from openpyxl import Workbook
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.worksheet.table import Table, TableStyleInfo
+from pypdf import PdfReader
 import tabula
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 path = os.path.join(HERE,
                     "files/Bertonia(2021)_Teachers' Preferences for Proximity and the Implications for Staffing Schools.pdf")
-# with pdfplumber.open(path) as pdf:
-#     print(len(pdf.pages))
-#     # for i in range(len(pdf.pages)):
-#     #     page = pdf.pages[i]
-#     #     t = page.extract_tables(
-#     #         {
-#     #             "horizontal_strategy": "lines",
-#     #             "vertical_strategy": "explicit",
-#     #             "explicit_vertical_lines": [50, 100, 150],
-#     #         })
-#     #     print(t)
+
+# pr = PdfReader(path)
 #
-#     page = pdf.pages[7]
-#     t = page.extract_text()
-#     print(t)
+# print(pr.pages[9].extract_text())
 
-# dfs = tabula.read_pdf(path, pages='all')
-#
-# print(len(dfs))
-#
-# dfs
+wb = Workbook()
+ws = wb.active
 
-tables = camelot.read_pdf(path)
+dfs = tabula.read_pdf(path, pages='all', multiple_tables=True)
 
-print(len(tables))
+print(len(dfs))
 
-tables
+for df in dfs:
+    for r in dataframe_to_rows(df):
+        ws.append(r)
+
+wb.save("table.xlsx")
