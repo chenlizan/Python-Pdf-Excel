@@ -6,18 +6,15 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from pypdf import PdfReader
 import tabula
 
-wb = Workbook()
-
 HERE = os.path.abspath(os.path.dirname(__file__))
 file_dir = os.path.join(HERE, "files")
 
-pattern = re.compile("Table\\s[0-9a-zA-Z]+\\.")
-
-dd = pattern.search("190 T. Falch & M. RønningTable 5. Effects of alternative measures on student performance")
+pattern = re.compile("table\\s[0-9a-zA-Z]+\\.", re.IGNORECASE)
 
 for f in os.listdir(file_dir):
     print("开始分析 " + f + ".xlsx")
     reader = PdfReader(os.path.join(file_dir, f))
+    wb = Workbook()
     ws = wb.active
     for paper_index in range(len(reader.pages)):
         print("#", end="")
